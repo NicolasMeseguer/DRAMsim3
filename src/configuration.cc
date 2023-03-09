@@ -15,14 +15,22 @@ Config::Config(std::string config_file, std::string out_dir)
         AbruptExit(__FILE__, __LINE__);
     }
 
+    std::cout << "Config()" << std::endl;
     // The initialization of the parameters has to be strictly in this order
     // because of internal dependencies
+    std::cout << "\tInitSystemParams()" << std::endl;
     InitSystemParams();
+    std::cout << "\tInitDRAMParams()" << std::endl;
     InitDRAMParams();
+    std::cout << "\tCalculateSize()" << std::endl;
     CalculateSize();
+    std::cout << "\tSetAddressMapping()" << std::endl;
     SetAddressMapping();
+    std::cout << "\tInitTimingParams()" << std::endl;
     InitTimingParams();
+    std::cout << "\tInitPowerParams()" << std::endl;
     InitPowerParams();
+    std::cout << "\tInitOtherParams()" << std::endl;
     InitOtherParams();
 #ifdef THERMAL
     InitThermalParams();
@@ -59,6 +67,14 @@ void Config::CalculateSize() {
         ranks = channel_size / megs_per_rank;
         channel_size = ranks * megs_per_rank;
     }
+    
+    std::cout << "\t\t devices_per_rank - " << devices_per_rank << std::endl;
+    std::cout << "\t\t page_size - " << page_size << std::endl;
+    std::cout << "\t\t megs_per_bank - " << megs_per_bank << std::endl;
+    std::cout << "\t\t megs_per_rank - " << megs_per_rank << std::endl;
+    std::cout << "\t\t ranks - " << ranks << std::endl;
+    std::cout << "\t\t channel_size - " << channel_size << std::endl;
+
     return;
 }
 
@@ -148,6 +164,27 @@ void Config::InitDRAMParams() {
     } else if (IsHBM()) {
         columns *= 2;
     }
+
+    if(IsHBM()) {
+        std::cout << "\t\t protocol - HBM" << std::endl;
+    }
+    std::cout << "\t\t bankgroups - " << bankgroups << std::endl;
+    std::cout << "\t\t banks_per_group - " << banks_per_group << std::endl;
+    std::cout << "\t\t bankgroup_enable - " << bankgroup_enable << std::endl;
+    std::cout << "\t\t banks - " << banks << std::endl;
+    std::cout << "\t\t rows - " << rows << std::endl;
+    std::cout << "\t\t columns - " << columns << std::endl;
+    std::cout << "\t\t device_width - " << device_width << std::endl;
+    std::cout << "\t\t BL - " << BL << std::endl;
+    std::cout << "\t\t num_dies - " << num_dies << std::endl;
+    std::cout << "\t\t enable_hbm_dual_cmd - " << enable_hbm_dual_cmd << std::endl;
+    std::cout << "\t\t num_links - " << num_links << std::endl;
+    std::cout << "\t\t link_width - " << link_width << std::endl;
+    std::cout << "\t\t link_speed - " << link_speed << std::endl;
+    std::cout << "\t\t block_size - " << block_size << std::endl;
+    std::cout << "\t\t xbar_queue_depth - " << xbar_queue_depth << std::endl;
+    std::cout << "\t\t burst_cycle - " << burst_cycle << std::endl;
+
     return;
 }
 
@@ -243,6 +280,21 @@ void Config::InitSystemParams() {
     sref_threshold = GetInteger("system", "sref_threshold", 1000);
     aggressive_precharging_enabled =
         reader.GetBoolean("system", "aggressive_precharging_enabled", false);
+
+    std::cout << "\t\t channel_size - " << channel_size << std::endl;
+    std::cout << "\t\t channels - " << channels << std::endl;
+    std::cout << "\t\t bus_width - " << bus_width << std::endl;
+    std::cout << "\t\t address_mapping - " << address_mapping << std::endl;
+    std::cout << "\t\t queue_structure - " << queue_structure << std::endl; 
+    std::cout << "\t\t row_buf_policy - " << row_buf_policy << std::endl;
+    std::cout << "\t\t cmd_queue_size - " << cmd_queue_size << std::endl;
+    std::cout << "\t\t trans_queue_size - " << trans_queue_size << std::endl;
+    std::cout << "\t\t unified_queue - " << unified_queue << std::endl;
+    std::cout << "\t\t write_buf_size - " << write_buf_size << std::endl;
+    std::cout << "\t\t ref_policy - " << ref_policy << std::endl;
+    std::cout << "\t\t enable_self_refresh - " << enable_self_refresh << std::endl;
+    std::cout << "\t\t sref_threshold - " << sref_threshold << std::endl;
+    std::cout << "\t\t aggressive_precharging_enabled - " << aggressive_precharging_enabled << std::endl;
 
     return;
 }
@@ -341,6 +393,45 @@ void Config::InitTimingParams() {
     WL = AL + CWL;
     read_delay = RL + burst_cycle;
     write_delay = WL + burst_cycle;
+
+    std::cout << "\t\t tCK - " << tCK << std::endl;
+    std::cout << "\t\t AL - " << AL << std::endl;
+    std::cout << "\t\t CL - " << CL << std::endl;
+    std::cout << "\t\t CWL - " << CWL << std::endl;
+    std::cout << "\t\t tCCD_L - " << tCCD_L << std::endl;
+    std::cout << "\t\t tCCD_S - " << tCCD_S << std::endl;
+    std::cout << "\t\t tRTRS - " << tRTRS << std::endl;
+    std::cout << "\t\t tRTP - " << tRTP << std::endl;
+    std::cout << "\t\t tWTR_L - " << tWTR_L << std::endl;
+    std::cout << "\t\t tWTR_S - " << tWTR_S << std::endl;
+    std::cout << "\t\t tWR - " << tWR << std::endl;
+    std::cout << "\t\t tRP - " << tRP << std::endl;
+    std::cout << "\t\t tRRD_L - " << tRRD_L << std::endl;
+    std::cout << "\t\t tRRD_S - " << tRRD_S << std::endl;
+    std::cout << "\t\t tRAS - " << tRAS << std::endl;
+    std::cout << "\t\t tRCD - " << tRCD << std::endl;
+    std::cout << "\t\t tRFC - " << tRFC << std::endl;
+    std::cout << "\t\t tRC - " << tRC << std::endl;
+    std::cout << "\t\t tCKE - " << tCKE << std::endl;
+    std::cout << "\t\t tCKESR - " << tCKESR << std::endl;
+    std::cout << "\t\t tXS - " << tXS << std::endl;
+    std::cout << "\t\t tXP - " << tXP << std::endl;
+    std::cout << "\t\t tRFCb - " << tRFCb << std::endl;
+    std::cout << "\t\t tREFI - " << tREFI << std::endl;
+    std::cout << "\t\t tREFIb - " << tREFIb << std::endl;
+    std::cout << "\t\t tFAW - " << tFAW << std::endl;
+    std::cout << "\t\t tRPRE - " << tRPRE << std::endl;
+    std::cout << "\t\t tWPRE - " << tWPRE << std::endl;
+    std::cout << "\t\t tPPD - " << tPPD << std::endl;
+    std::cout << "\t\t t32AW - " << t32AW << std::endl;
+    std::cout << "\t\t tRCDRD - " << tRCDRD << std::endl;
+    std::cout << "\t\t tRCDWR - " << tRCDWR << std::endl;
+    std::cout << "\t\t ideal_memory_latency - " << ideal_memory_latency << std::endl;
+    std::cout << "\t\t RL - " << RL << std::endl;
+    std::cout << "\t\t WL - " << WL << std::endl;
+    std::cout << "\t\t read_delay - " << read_delay << std::endl;
+    std::cout << "\t\t write_delay - " << write_delay << std::endl;
+
     return;
 }
 
@@ -401,6 +492,29 @@ void Config::SetAddressMapping() {
     ba_mask = (1 << field_widths.at("ba")) - 1;
     ro_mask = (1 << field_widths.at("ro")) - 1;
     co_mask = (1 << field_widths.at("co")) - 1;
+
+    std::cout << "\t\t request_size_bytes - " << request_size_bytes << std::endl;
+    std::cout << "\t\t shift_bits - " << shift_bits << std::endl;
+    std::cout << "\t\t col_low_bits - " << col_low_bits << std::endl;
+    std::cout << "\t\t field_widths['ch'] - " <<  field_widths["ch"] << std::endl;
+    std::cout << "\t\t field_widths['ra'] - " <<  field_widths["ra"] << std::endl;
+    std::cout << "\t\t field_widths['bg'] - " <<  field_widths["bg"] << std::endl;
+    std::cout << "\t\t field_widths['ba'] - " <<  field_widths["ba"] << std::endl;
+    std::cout << "\t\t field_widths['ro'] - " <<  field_widths["ro"] << std::endl;
+    std::cout << "\t\t field_widths['co'] - " <<  field_widths["co"] << std::endl;
+    std::cout << "\t\t ch_pos - " << ch_pos << std::endl;
+    std::cout << "\t\t ra_pos - " << ra_pos << std::endl;
+    std::cout << "\t\t bg_pos - " << bg_pos << std::endl;
+    std::cout << "\t\t ba_pos - " << ba_pos << std::endl;
+    std::cout << "\t\t ro_pos - " << ro_pos << std::endl;
+    std::cout << "\t\t co_pos - " << co_pos << std::endl;
+    std::cout << "\t\t ------------ " << std::endl;
+    std::cout << "\t\t ch_mask - " << ch_mask << std::endl;
+    std::cout << "\t\t ra_mask - " << ra_mask << std::endl;
+    std::cout << "\t\t bg_mask - " << bg_mask << std::endl;
+    std::cout << "\t\t ba_mask - " << ba_mask << std::endl;
+    std::cout << "\t\t ro_mask - " << ro_mask << std::endl;
+    std::cout << "\t\t co_mask - " << co_mask << std::endl;
 }
 
 }  // namespace dramsim3

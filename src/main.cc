@@ -55,11 +55,13 @@ int main(int argc, const char **argv) {
         cpu = new TraceBasedCPU(config_file, output_dir, trace_file);
     } else {
         if (stream_type == "stream" || stream_type == "s") {
+            std::cout << "Calling StreamCPU()" << std::endl;
             cpu = new StreamCPU(config_file, output_dir);
         } else {
             cpu = new RandomCPU(config_file, output_dir);
         }
     }
+    std::cout << "Simulation ticking" << std::endl;
 
     for (uint64_t clk = 0; clk < cycles; clk++) {
         cpu->ClockTick();
